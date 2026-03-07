@@ -1,0 +1,13 @@
+### Get all contacts (local)
+GET http://localhost:3000/contacts
+Accept: application/json
+
+###
+
+# Replace <id> with a real MongoDB _id value from the contacts collection
+GET http://localhost:3000/contacts/<id>
+Accept: application/json
+
+### Get all contacts (Render)
+GET https://cse341-sgi5.onrender.com
+Accept: application/json
