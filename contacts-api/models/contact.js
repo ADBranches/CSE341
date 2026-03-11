@@ -1,5 +1,3 @@
-// models/contact.js
-
 /**
  * Contact document shape (MongoDB).
  *
@@ -9,7 +7,7 @@
  *   lastName: string,
  *   email: string,
  *   favoriteColor: string,
- *   birthday: string (e.g. "1995-09-21")
+ *   birthday: string ("1995-09-21")
  * }
  */
 

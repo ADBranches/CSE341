@@ -1,10 +1,9 @@
-// controllers/contactsController.js
 const { ObjectId } = require("mongodb");
 const { getDb } = require("../db/conn");
 
 /**
  * GET /contacts
- * Return all contacts from MongoDB.
+ * Returnign all contacts from MongoDB.
  */
 async function getAllContacts(req, res, next) {
   try {
@@ -20,7 +19,7 @@ async function getAllContacts(req, res, next) {
 
 /**
  * GET /contacts/:id
- * Return a single contact by MongoDB ObjectId.
+ * Returning a single contact by MongoDB ObjectId.
  */
 async function getContactById(req, res, next) {
   try {

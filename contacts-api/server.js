@@ -1,4 +1,3 @@
-// server.js
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
@@ -13,17 +12,14 @@ const PORT = process.env.PORT || 8080;
 app.use(cors());
 app.use(express.json());
 
-// Root route (simple health/info)
 app.get("/", (req, res) => {
   res.json({
     message: "CSE 341 Contacts API - Week 01",
   });
 });
 
-// Contacts routes
 app.use("/contacts", require("./routes/contacts"));
 
-// Start server ONLY after DB connects
 connectToServer((err) => {
   if (err) {
     console.error("MongoDB connection failed. Server not started.");

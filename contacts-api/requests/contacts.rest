@@ -4,8 +4,8 @@ Accept: application/json
 
 ###
 
-# Replace <id> with a real MongoDB _id value from the contacts collection
-GET http://localhost:3000/contacts/<id>
+# the _id value (69ac2e7158ea35a821127061) is from the contacts collection for one of the objects i created inside the mongo db
+GET http://localhost:3000/contacts/69ac2e7158ea35a821127061
 Accept: application/json
 
 ### Get all contacts (Render)

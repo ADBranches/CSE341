@@ -1,4 +1,3 @@
-// routes/contacts.js
 const express = require("express");
 const { ObjectId } = require("mongodb");
 const { getDb } = require("../db/conn");
@@ -7,7 +6,7 @@ const router = express.Router();
 
 /**
  * GET /contacts
- * Return all contacts in the collection.
+ * we're going to Return all contacts in the collection.
  */
 router.get("/", async (req, res) => {
   try {
@@ -22,7 +21,7 @@ router.get("/", async (req, res) => {
 
 /**
  * GET /contacts/:id
- * Return a single contact by _id.
+ * we're going to Return a single contact by _id.
  */
 router.get("/:id", async (req, res) => {
   try {

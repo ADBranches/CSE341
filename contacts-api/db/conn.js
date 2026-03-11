@@ -1,4 +1,3 @@
-// db/conn.js
 const { MongoClient } = require("mongodb");
 const dotenv = require("dotenv");
 
@@ -7,7 +6,7 @@ dotenv.config();
 let _db;
 
 /**
- * Connect to MongoDB once and reuse the same connection.
+ *  func that Connects to MongoDB once and reuses the same connection.
  */
 async function connectToServer(callback) {
   const uri = process.env.MONGODB_URI;
@@ -21,18 +20,17 @@ async function connectToServer(callback) {
 
   try {
     await client.connect();
-    // Use a specific DB (you can name it contacts-db in the URI)
-    _db = client.db(); // default DB from URI
-    console.log("✅ Connected to MongoDB successfully.");
+    _db = client.db();
+    console.log(" Connected to MongoDB successfully.");
     return callback();
   } catch (err) {
-    console.error("❌ Failed to connect to MongoDB:", err);
+    console.error(" Failed to connect to MongoDB:", err);
     return callback(err);
   }
 }
 
 /**
- * Get the active DB instance.
+ * Geting the active DB instance.
  */
 function getDb() {
   if (!_db) {
