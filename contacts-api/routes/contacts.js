@@ -6,7 +6,7 @@ router.get(
   '/',
   /* #swagger.tags = ['Contacts']
      #swagger.summary = 'Get all contacts'
-     #swagger.description = 'Returns all contacts from the database.'
+     #swagger.description = 'Fetch all contacts.'
   */
   contactsController.getAllContacts
 );
@@ -14,11 +14,11 @@ router.get(
 router.get(
   '/:id',
   /* #swagger.tags = ['Contacts']
-     #swagger.summary = 'Get contact by id'
-     #swagger.description = 'Returns one contact using its MongoDB ObjectId.'
+     #swagger.summary = 'Get one contact'
+     #swagger.description = 'Fetch a single contact by id.'
      #swagger.parameters['id'] = {
        in: 'path',
-       description: 'MongoDB ObjectId',
+       description: 'Contact id',
        required: true,
        type: 'string'
      }
@@ -29,8 +29,8 @@ router.get(
 router.post(
   '/',
   /* #swagger.tags = ['Contacts']
-     #swagger.summary = 'Create a new contact'
-     #swagger.description = 'Creates a new contact.'
+     #swagger.summary = 'Create contact'
+     #swagger.description = 'Add a new contact.'
      #swagger.parameters['body'] = {
        in: 'body',
        required: true,
@@ -49,11 +49,11 @@ router.post(
 router.put(
   '/:id',
   /* #swagger.tags = ['Contacts']
-     #swagger.summary = 'Update a contact'
-     #swagger.description = 'Updates an existing contact by id.'
+     #swagger.summary = 'Update contact'
+     #swagger.description = 'Update an existing contact by id.'
      #swagger.parameters['id'] = {
        in: 'path',
-       description: 'MongoDB ObjectId',
+       description: 'Contact id',
        required: true,
        type: 'string'
      }
@@ -75,11 +75,11 @@ router.put(
 router.delete(
   '/:id',
   /* #swagger.tags = ['Contacts']
-     #swagger.summary = 'Delete a contact'
-     #swagger.description = 'Deletes a contact by id.'
+     #swagger.summary = 'Delete contact'
+     #swagger.description = 'Remove a contact by id.'
      #swagger.parameters['id'] = {
        in: 'path',
-       description: 'MongoDB ObjectId',
+       description: 'Contact id',
        required: true,
        type: 'string'
      }

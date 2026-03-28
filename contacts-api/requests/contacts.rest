@@ -27,7 +27,6 @@ Content-Type: application/json
   "lastName": "User"
 }
 
-# Updating existing contact
 PUT {{baseUrl}}/contacts/{{contactId}}
 Content-Type: application/json
 
@@ -39,7 +38,6 @@ Content-Type: application/json
   "birthday": "2001-01-24"
 }
 
-# Updating existing contact - for an invalid id
 PUT {{baseUrl}}/contacts/123
 Content-Type: application/json
 
