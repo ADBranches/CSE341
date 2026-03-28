@@ -1,0 +1,34 @@
+@baseUrl = http://localhost:3000
+
+### Get all users
+GET {{baseUrl}}/users
+
+### Create user
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "firstName": "Edwin",
+  "lastName": "Bwambale",
+  "email": "edwin@example.com",
+  "role": "admin",
+  "phone": "+256700000000",
+  "isActive": true
+}
+
+### Get user by id
+GET {{baseUrl}}/users/REPLACE_WITH_REAL_ID
+
+### Update user
+PUT {{baseUrl}}/users/REPLACE_WITH_REAL_ID
+Content-Type: application/json
+
+{
+  "firstName": "Edwin Updated",
+  "role": "user",
+  "phone": "+256700000001",
+  "isActive": false
+}
+
+### Delete user
+DELETE {{baseUrl}}/users/REPLACE_WITH_REAL_ID

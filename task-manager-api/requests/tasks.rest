@@ -1,0 +1,34 @@
+@baseUrl = http://localhost:3000
+
+### Get all tasks
+GET {{baseUrl}}/tasks
+
+### Create task
+POST {{baseUrl}}/tasks
+Content-Type: application/json
+
+{
+  "title": "Build Week 03 API",
+  "description": "Create users and tasks GET/POST routes",
+  "status": "pending",
+  "priority": "high",
+  "category": "school",
+  "dueDate": "2026-03-30",
+  "assignedTo": "Edwin"
+}
+
+### Get task by id
+GET {{baseUrl}}/tasks/69c81ea3f4a73146c0138b98
+
+### Update task
+PUT {{baseUrl}}/tasks/REPLACE_WITH_REAL_ID
+Content-Type: application/json
+
+{
+  "title": "Updated Week 03 API",
+  "status": "completed",
+  "priority": "medium"
+}
+
+### Delete task
+DELETE {{baseUrl}}/tasks/REPLACE_WITH_REAL_ID
