@@ -6,8 +6,13 @@ const contactsRouter = require('./routes/contacts');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 
+const parsedBaseUrl = new URL(BASE_URL);
+swaggerDocument.host = parsedBaseUrl.host;
+swaggerDocument.schemes = [parsedBaseUrl.protocol.replace(':', '')];
+
 const app = express();
 const PORT = process.env.PORT || 3000;
+const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}`;
 
 app.use(express.json());
 
@@ -41,7 +46,7 @@ async function startServer() {
   await connectToDb(uri);
 
   app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Server running on ${BASE_URL}`);
   });
 }
 
