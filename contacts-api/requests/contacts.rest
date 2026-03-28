@@ -1,13 +1,69 @@
-### Get all contacts (local)
-GET http://localhost:3000/contacts
-Accept: application/json
+@baseUrl = http://localhost:3000
+@contactId = 69ac2e7158ea35a821127061
+@missingId = 507f1f77bcf86cd799439011
 
-###
+GET {{baseUrl}}/
 
-# the _id value (69ac2e7158ea35a821127061) is from the contacts collection for one of the objects i created inside the mongo db
-GET http://localhost:3000/contacts/69ac2e7158ea35a821127061
-Accept: application/json
+GET {{baseUrl}}/contacts
 
-### Get all contacts (Render)
-GET https://cse341-sgi5.onrender.com
-Accept: application/json
+GET {{baseUrl}}/contacts/{{contactId}}
+
+POST {{baseUrl}}/contacts
+Content-Type: application/json
+
+{
+  "firstName": "Joshua",
+  "lastName": "Asiimwe",
+  "email": "joshua.asiimwe@example.com",
+  "favoriteColor": "Orange",
+  "birthday": "2001-12-10"
+}
+
+POST {{baseUrl}}/contacts
+Content-Type: application/json
+
+{
+  "firstName": "Incomplete",
+  "lastName": "User"
+}
+
+# Updating existing contact
+PUT {{baseUrl}}/contacts/{{contactId}}
+Content-Type: application/json
+
+{
+  "firstName": "Grace",
+  "lastName": "Auma",
+  "email": "grace.updated@example.com",
+  "favoriteColor": "Lavender",
+  "birthday": "2001-01-24"
+}
+
+# Updating existing contact - for an invalid id
+PUT {{baseUrl}}/contacts/123
+Content-Type: application/json
+
+{
+  "firstName": "Bad",
+  "lastName": "Id",
+  "email": "badid@example.com",
+  "favoriteColor": "Gray",
+  "birthday": "2000-01-01"
+}
+
+PUT {{baseUrl}}/contacts/{{missingId}}
+Content-Type: application/json
+
+{
+  "firstName": "Ghost",
+  "lastName": "User",
+  "email": "ghost@example.com",
+  "favoriteColor": "Transparent",
+  "birthday": "1990-01-01"
+}
+
+DELETE {{baseUrl}}/contacts/{{contactId}}
+
+DELETE {{baseUrl}}/contacts/abc
+
+DELETE {{baseUrl}}/contacts/{{missingId}}

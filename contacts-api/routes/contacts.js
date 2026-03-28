@@ -1,50 +1,90 @@
-const express = require("express");
-const { ObjectId } = require("mongodb");
-const { getDb } = require("../db/conn");
-
+const express = require('express');
 const router = express.Router();
+const contactsController = require('../controllers/contactsController');
 
-/**
- * GET /contacts
- * we're going to Return all contacts in the collection.
- */
-router.get("/", async (req, res) => {
-  try {
-    const db = getDb();
-    const contacts = await db.collection("contacts").find({}).toArray();
-    res.status(200).json(contacts);
-  } catch (err) {
-    console.error("Error fetching contacts:", err);
-    res.status(500).json({ message: "Error fetching contacts" });
-  }
-});
+router.get(
+  '/',
+  /* #swagger.tags = ['Contacts']
+     #swagger.summary = 'Get all contacts'
+     #swagger.description = 'Returns all contacts from the database.'
+  */
+  contactsController.getAllContacts
+);
 
-/**
- * GET /contacts/:id
- * we're going to Return a single contact by _id.
- */
-router.get("/:id", async (req, res) => {
-  try {
-    const db = getDb();
-    const id = req.params.id;
+router.get(
+  '/:id',
+  /* #swagger.tags = ['Contacts']
+     #swagger.summary = 'Get contact by id'
+     #swagger.description = 'Returns one contact using its MongoDB ObjectId.'
+     #swagger.parameters['id'] = {
+       in: 'path',
+       description: 'MongoDB ObjectId',
+       required: true,
+       type: 'string'
+     }
+  */
+  contactsController.getContactById
+);
 
-    if (!ObjectId.isValid(id)) {
-      return res.status(400).json({ message: "Invalid contact id" });
-    }
+router.post(
+  '/',
+  /* #swagger.tags = ['Contacts']
+     #swagger.summary = 'Create a new contact'
+     #swagger.description = 'Creates a new contact.'
+     #swagger.parameters['body'] = {
+       in: 'body',
+       required: true,
+       schema: {
+         firstName: 'Joshua',
+         lastName: 'Asiimwe',
+         email: 'joshua.asiimwe@example.com',
+         favoriteColor: 'Orange',
+         birthday: '2001-12-10'
+       }
+     }
+  */
+  contactsController.createContact
+);
 
-    const contact = await db
-      .collection("contacts")
-      .findOne({ _id: new ObjectId(id) });
+router.put(
+  '/:id',
+  /* #swagger.tags = ['Contacts']
+     #swagger.summary = 'Update a contact'
+     #swagger.description = 'Updates an existing contact by id.'
+     #swagger.parameters['id'] = {
+       in: 'path',
+       description: 'MongoDB ObjectId',
+       required: true,
+       type: 'string'
+     }
+     #swagger.parameters['body'] = {
+       in: 'body',
+       required: true,
+       schema: {
+         firstName: 'Grace',
+         lastName: 'Auma',
+         email: 'grace.updated@example.com',
+         favoriteColor: 'Lavender',
+         birthday: '2001-01-24'
+       }
+     }
+  */
+  contactsController.updateContact
+);
 
-    if (!contact) {
-      return res.status(404).json({ message: "Contact not found" });
-    }
-
-    res.status(200).json(contact);
-  } catch (err) {
-    console.error("Error fetching contact:", err);
-    res.status(500).json({ message: "Error fetching contact" });
-  }
-});
+router.delete(
+  '/:id',
+  /* #swagger.tags = ['Contacts']
+     #swagger.summary = 'Delete a contact'
+     #swagger.description = 'Deletes a contact by id.'
+     #swagger.parameters['id'] = {
+       in: 'path',
+       description: 'MongoDB ObjectId',
+       required: true,
+       type: 'string'
+     }
+  */
+  contactsController.deleteContact
+);
 
 module.exports = router;

@@ -1,32 +1,53 @@
-const express = require("express");
-const cors = require("cors");
-const dotenv = require("dotenv");
-const { connectToServer } = require("./db/conn");
+require('dotenv').config();
 
-dotenv.config();
+const express = require('express');
+const { connectToDb } = require('./db/conn');
+const contactsRouter = require('./routes/contacts');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
 
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
 
-// Middleware
-app.use(cors());
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.json({
-    message: "CSE 341 Contacts API - Week 01",
+app.get('/', (req, res) => {
+  res.status(200).json({
+    message: 'Contacts API is running.',
   });
 });
 
-app.use("/contacts", require("./routes/contacts"));
+app.use('/contacts', contactsRouter);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-connectToServer((err) => {
-  if (err) {
-    console.error("MongoDB connection failed. Server not started.");
-    process.exit(1);
+app.use((req, res) => {
+  res.status(404).json({ message: 'Route not found.' });
+});
+
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(err.status || 500).json({
+    message: err.message || 'Internal server error.',
+  });
+});
+
+async function startServer() {
+  const uri = process.env.MONGODB_URI;
+
+  if (!uri) {
+    throw new Error('Missing MONGODB_URI in .env');
   }
 
+  await connectToDb(uri);
+
   app.listen(PORT, () => {
-    console.log(`🚀 Server is running on port ${PORT}`);
+    console.log(`Server running on http://localhost:${PORT}`);
   });
+}
+
+startServer().catch((error) => {
+  console.error('Startup failed:', error.message);
+  process.exit(1);
 });
+
+module.exports = app;
