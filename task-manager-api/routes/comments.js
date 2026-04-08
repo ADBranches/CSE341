@@ -39,7 +39,7 @@ router.get("/:id", validateObjectId("id", "comment"), getCommentById);
       }
    }
 */
-router.post("/", validateComment(false), createComment);
+router.post("/", requireAuth, validateComment(false), createComment);
 
 /* #swagger.tags = ['Comments']
    #swagger.summary = 'Update a comment'

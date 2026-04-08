@@ -23,7 +23,7 @@ router.get("/:id", validateObjectId("id", "project"), getProjectById);
       description: 'Server error'
    }
 */
-router.post("/", validateProject(false), createProject);
+router.post("/", requireAuth, validateProject(false), createProject);
 router.put("/:id", validateObjectId("id", "project"), validateProject(true), updateProject);
 router.delete("/:id", validateObjectId("id", "project"), deleteProject);
 
