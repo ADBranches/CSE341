@@ -1,6 +1,7 @@
 import { Router } from "express";
 import validateObjectId from "../middleware/validateObjectId.js";
 import validateComment from "../validators/commentValidator.js";
+import requireAuth from "../middleware/requireAuth.js";
 import {
   getAllComments,
   getCommentById,
@@ -59,6 +60,7 @@ router.post("/", requireAuth, validateComment(false), createComment);
 */
 router.put(
   "/:id",
+  requireAuth,
   validateObjectId("id", "comment"),
   validateComment(true),
   updateComment
@@ -73,6 +75,11 @@ router.put(
       type: 'string'
    }
 */
-router.delete("/:id", validateObjectId("id", "comment"), deleteComment);
+router.delete(
+  "/:id",
+  requireAuth,
+  validateObjectId("id", "comment"),
+  deleteComment
+);
 
 export default router;

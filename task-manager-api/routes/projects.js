@@ -1,6 +1,7 @@
 import { Router } from "express";
 import validateObjectId from "../middleware/validateObjectId.js";
 import validateProject from "../validators/projectValidator.js";
+import requireAuth from "../middleware/requireAuth.js";
 import {
   getAllProjects,
   getProjectById,
@@ -24,7 +25,7 @@ router.get("/:id", validateObjectId("id", "project"), getProjectById);
    }
 */
 router.post("/", requireAuth, validateProject(false), createProject);
-router.put("/:id", validateObjectId("id", "project"), validateProject(true), updateProject);
-router.delete("/:id", validateObjectId("id", "project"), deleteProject);
+router.put("/:id", requireAuth, validateObjectId("id", "project"), validateProject(true), updateProject);
+router.delete("/:id", requireAuth, validateObjectId("id", "project"), deleteProject);
 
 export default router;
