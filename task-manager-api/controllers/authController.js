@@ -6,9 +6,12 @@ export const getCurrentUser = (req, res) => {
     });
   }
 
+  const user =
+    typeof req.user === "string" ? JSON.parse(req.user) : req.user;
+
   return res.status(200).json({
     success: true,
-    data: req.user,
+    data: user,
   });
 };
 

@@ -20,7 +20,7 @@ router.get(
 
 /* #swagger.tags = ['Auth']
    #swagger.summary = 'GitHub OAuth callback'
-   #swagger.description = 'GitHub redirects here after successful authentication.'
+   #swagger.description = 'GitHub redirects here after successful authentication. A session is created and the user is redirected to /auth/me.'
 */
 router.get(
   "/callback",
@@ -38,11 +38,13 @@ router.get("/failure", authFailure);
 
 /* #swagger.tags = ['Auth']
    #swagger.summary = 'Get currently authenticated user'
+   #swagger.description = 'Returns the currently authenticated user session. Requires successful OAuth login first.'
 */
 router.get("/me", getCurrentUser);
 
 /* #swagger.tags = ['Auth']
    #swagger.summary = 'Log out current user'
+   #swagger.description = 'Ends the current authenticated session.'
 */
 router.post("/logout", logoutUser);
 

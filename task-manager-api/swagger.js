@@ -16,7 +16,7 @@ const doc = {
   info: {
     title: "Task Manager API",
     description:
-      "CSE 341 Task Manager API documentation for users, projects, tasks, and comments.",
+      "CSE 341 Task Manager API documentation for auth, users, projects, tasks, and comments.",
     version: "1.0.0",
   },
   host: parsed.host,
@@ -25,6 +25,10 @@ const doc = {
   consumes: ["application/json"],
   produces: ["application/json"],
   tags: [
+    {
+      name: "Auth",
+      description: "OAuth authentication endpoints",
+    },
     {
       name: "Users",
       description: "User management endpoints",
@@ -96,7 +100,14 @@ const doc = {
 };
 
 const outputFile = "./swagger.json";
-const endpointsFiles = ["./server.js"];
+const endpointsFiles = [
+  "./routes/auth.js",
+  "./routes/users.js",
+  "./routes/projects.js",
+  "./routes/tasks.js",
+  "./routes/comments.js",
+  "./app.js",
+];
 
 await swaggerAutogen()(outputFile, endpointsFiles, doc);
 
