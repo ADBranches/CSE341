@@ -48,5 +48,5 @@ export const authFailure = (req, res) => {
 };
 
 export const authSuccessRedirect = (req, res) => {
-  return res.redirect("/api-docs");
+  return res.redirect("/auth/me");
 };
