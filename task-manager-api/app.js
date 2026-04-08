@@ -1,37 +1,26 @@
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
-import swaggerUi from "swagger-ui-express";
 
-import swaggerDocument from "./swagger.json" with { type: "json" };
-import app from "./app.js";
-
-import connectDB from "./db/conn.js";
 import usersRouter from "./routes/users.js";
 import projectsRouter from "./routes/projects.js";
 import tasksRouter from "./routes/tasks.js";
 import commentsRouter from "./routes/comments.js";
 import { notFoundHandler, errorHandler } from "./middleware/errorHandler.js";
 
-dotenv.config();
+const app = express();
 
-const PORT = process.env.PORT || 3000;
-
-// middleware
 app.use(cors());
 app.use(express.json());
 
-// simple request logger
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.url}`);
   next();
 });
 
-// routes
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
-    message: "team-task-api is running"
+    message: "team-task-api is running",
   });
 });
 
@@ -39,7 +28,7 @@ app.get("/api/health", (req, res) => {
   res.status(200).json({
     success: true,
     message: "API healthy",
-    database: "MongoDB Atlas connection configured"
+    database: "MongoDB Atlas connection configured",
   });
 });
 
@@ -48,20 +37,7 @@ app.use("/projects", projectsRouter);
 app.use("/tasks", tasksRouter);
 app.use("/comments", commentsRouter);
 
-// swagger docs
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
-// 404 fallback
 app.use(notFoundHandler);
 app.use(errorHandler);
 
-const startServer = async () => {
-  await connectDB();
-
-  app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-    console.log(`Swagger docs on http://localhost:${PORT}/api-docs`);
-  });
-};
-
-startServer();
+export default app;

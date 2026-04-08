@@ -1,0 +1,33 @@
+@baseUrl = http://localhost:3000
+@projectId = 69d5812b89060222c8d778d5
+@ownerId = 69d57f3689060222c8d778c9
+
+###
+GET {{baseUrl}}/projects
+
+###
+GET {{baseUrl}}/projects/{{projectId}}
+
+###
+POST {{baseUrl}}/projects
+Content-Type: application/json
+
+{
+  "name": "Task Manager API Build",
+  "ownerId": "{{ownerId}}",
+  "description": "Core CRUD verification",
+  "status": "active",
+  "createdAt": "2026-04-08T00:00:00.000Z"
+}
+
+###
+PUT {{baseUrl}}/projects/{{projectId}}
+Content-Type: application/json
+
+{
+  "description": "Updated project description from REST client",
+  "status": "completed"
+}
+
+###
+DELETE {{baseUrl}}/projects/{{projectId}}

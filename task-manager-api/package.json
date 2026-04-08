@@ -3,10 +3,17 @@
   "version": "1.0.0",
   "description": "CSE 341 task manager API",
   "main": "server.js",
+  "type": "module",
+
+  "jest": {
+    "testEnvironment": "node"
+  },
+  
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "swagger": "node swagger.js"
+    "swagger": "node swagger.js",
+    "test": "NODE_ENV=test node --experimental-vm-modules ./node_modules/jest/bin/jest.js --runInBand"
   },
   "keywords": [
     "express",
@@ -21,10 +28,13 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "mongodb": "^6.16.0",
+    "mongoose": "^9.4.1",
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
+    "jest": "^30.3.0",
     "nodemon": "^3.1.10",
+    "supertest": "^7.2.2",
     "swagger-autogen": "^2.23.7"
   }
 }

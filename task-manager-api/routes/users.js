@@ -1,19 +1,20 @@
-const express = require('express');
-const validateUser = require('../middleware/validateUser');
-const {
+import express from "express";
+import validateUser from "../middleware/validateUser.js";
+import validateObjectId from "../middleware/validateObjectId.js";
+import {
   getAllUsers,
   getUserById,
   createUser,
   updateUser,
-  deleteUser
-} = require('../controllers/usersController');
+  deleteUser,
+} from "../controllers/usersController.js";
 
 const router = express.Router();
 
 /* #swagger.tags = ['Users']
    #swagger.summary = 'Get all users'
 */
-router.get('/', getAllUsers);
+router.get("/", getAllUsers);
 
 /* #swagger.tags = ['Users']
    #swagger.summary = 'Get user by id'
@@ -24,7 +25,7 @@ router.get('/', getAllUsers);
       type: 'string'
    }
 */
-router.get('/:id', getUserById);
+router.get("/:id", validateObjectId("id", "user"), getUserById);
 
 /* #swagger.tags = ['Users']
    #swagger.summary = 'Create a user'
@@ -41,8 +42,7 @@ router.get('/:id', getUserById);
       }
    }
 */
-
-router.post('/', validateUser(false), createUser);
+router.post("/", validateUser(false), createUser);
 
 /* #swagger.tags = ['Users']
    #swagger.summary = 'Update a user'
@@ -78,8 +78,7 @@ router.post('/', validateUser(false), createUser);
       description: 'Server error'
    }
 */
-router.put('/:id', validateUser(true), updateUser);
-router.put('/:id', validateUser(true), updateUser);
+router.put("/:id", validateObjectId("id", "user"), validateUser(true), updateUser);
 
 /* #swagger.tags = ['Users']
    #swagger.summary = 'Delete a user'
@@ -103,7 +102,6 @@ router.put('/:id', validateUser(true), updateUser);
       description: 'Server error'
    }
 */
-router.delete('/:id', deleteUser);
-router.delete('/:id', deleteUser);
+router.delete("/:id", validateObjectId("id", "user"), deleteUser);
 
-module.exports = router;
+export default router;

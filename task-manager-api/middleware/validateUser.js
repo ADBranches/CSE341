@@ -45,4 +45,4 @@ function validateUser(isUpdate = false) {
   };
 }
 
-module.exports = validateUser;
+export default validateUser;

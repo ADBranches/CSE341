@@ -1,7 +1,9 @@
-require('dotenv').config();
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const PORT = Number(process.env.PORT || 3000);
-const NODE_ENV = process.env.NODE_ENV || 'development';
+const NODE_ENV = process.env.NODE_ENV || "development";
 
 const BASE_URL =
   process.env.BASE_URL ||
@@ -18,7 +20,7 @@ const MONGODB_URI = process.env.MONGODB_URI;
 
 const requiredVars = {
   DB_NAME,
-  MONGODB_URI
+  MONGODB_URI,
 };
 
 for (const [key, value] of Object.entries(requiredVars)) {
@@ -27,11 +29,20 @@ for (const [key, value] of Object.entries(requiredVars)) {
   }
 }
 
-module.exports = {
+export {
   PORT,
   NODE_ENV,
   BASE_URL,
   CORS_ORIGIN,
   DB_NAME,
-  MONGODB_URI
+  MONGODB_URI,
+};
+
+export default {
+  PORT,
+  NODE_ENV,
+  BASE_URL,
+  CORS_ORIGIN,
+  DB_NAME,
+  MONGODB_URI,
 };

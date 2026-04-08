@@ -1,51 +1,103 @@
-const swaggerAutogen = require('swagger-autogen')();
-const { BASE_URL } = require('./config/env');
+import swaggerAutogen from "swagger-autogen";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const port = process.env.PORT || 3000;
+const baseUrl =
+  process.env.BASE_URL ||
+  process.env.RENDER_EXTERNAL_URL ||
+  `http://localhost:${port}`;
+
+const parsed = new URL(baseUrl);
 
 const doc = {
+  swagger: "2.0",
   info: {
-    title: 'Task Manager API',
-    description: 'CSE 341 Week 03 Task Manager API documentation',
-    version: '1.0.0'
+    title: "Task Manager API",
+    description:
+      "CSE 341 Task Manager API documentation for users, projects, tasks, and comments.",
+    version: "1.0.0",
   },
-  host: BASE_URL.replace(/^https?:\/\//, ''),
-  schemes: [BASE_URL.startsWith('https') ? 'https' : 'http'],
-  consumes: ['application/json'],
-  produces: ['application/json'],
+  host: parsed.host,
+  basePath: "/",
+  schemes: [parsed.protocol.replace(":", "")],
+  consumes: ["application/json"],
+  produces: ["application/json"],
   tags: [
     {
-      name: 'Users',
-      description: 'User management endpoints'
+      name: "Users",
+      description: "User management endpoints",
     },
     {
-      name: 'Tasks',
-      description: 'Task management endpoints'
-    }
+      name: "Projects",
+      description: "Project management endpoints",
+    },
+    {
+      name: "Tasks",
+      description: "Task management endpoints",
+    },
+    {
+      name: "Comments",
+      description: "Comment management endpoints",
+    },
   ],
   definitions: {
     UserInput: {
-      firstName: 'Edwin',
-      lastName: 'Bwambale',
-      email: 'edwin@example.com',
-      role: 'admin',
-      phone: '+256700000000',
-      isActive: true
+      type: "object",
+      properties: {
+        firstName: { type: "string", example: "Edwin" },
+        lastName: { type: "string", example: "Bwambale" },
+        email: { type: "string", example: "edwin@example.com" },
+        role: { type: "string", example: "admin" },
+        phone: { type: "string", example: "+256700000000" },
+        isActive: { type: "boolean", example: true },
+      },
+    },
+    ProjectInput: {
+      type: "object",
+      properties: {
+        name: { type: "string", example: "Task Manager API Build" },
+        ownerId: { type: "string", example: "69d57f3689060222c8d778c9" },
+        description: { type: "string", example: "Core CRUD verification" },
+        status: { type: "string", example: "active" },
+        createdAt: { type: "string", example: "2026-04-08T00:00:00.000Z" },
+      },
     },
     TaskInput: {
-      title: 'Build Week 03 API',
-      description: 'Create users and tasks GET/POST routes',
-      status: 'pending',
-      priority: 'high',
-      category: 'school',
-      dueDate: '2026-03-30',
-      assignedTo: 'Edwin'
+      type: "object",
+      properties: {
+        title: { type: "string", example: "Validate task endpoints" },
+        projectId: { type: "string", example: "69d5812b89060222c8d778d5" },
+        createdBy: { type: "string", example: "69d57f3689060222c8d778c9" },
+        assignedTo: { type: "string", example: "69d57f3f89060222c8d778cb" },
+        status: { type: "string", example: "pending" },
+      },
+    },
+    CommentInput: {
+      type: "object",
+      properties: {
+        taskId: { type: "string", example: "69d58abc89060222c8d778ef" },
+        userId: { type: "string", example: "69d57f3689060222c8d778c9" },
+        content: {
+          type: "string",
+          example: "Project CRUD is working well. Next I am validating the task endpoints.",
+        },
+      },
     },
     ErrorResponse: {
-      message: 'Invalid user id'
-    }
-  }
+      type: "object",
+      properties: {
+        success: { type: "boolean", example: false },
+        message: { type: "string", example: "Invalid user ID" },
+      },
+    },
+  },
 };
 
-const outputFile = './swagger.json';
-const endpointsFiles = ['./server.js'];
+const outputFile = "./swagger.json";
+const endpointsFiles = ["./server.js"];
 
-swaggerAutogen(outputFile, endpointsFiles, doc);
+await swaggerAutogen()(outputFile, endpointsFiles, doc);
+
+console.log("swagger.json generated successfully");

@@ -1,34 +1,35 @@
 @baseUrl = http://localhost:3000
+@taskId = REPLACE_WITH_REAL_TASK_ID
+@projectId = 69d5812b89060222c8d778d5
+@createdBy = 69d57f3689060222c8d778c9
+@assignedTo = 69d57f3f89060222c8d778cb
 
-### Get all tasks
+###
 GET {{baseUrl}}/tasks
 
-### Create task
+###
+GET {{baseUrl}}/tasks/{{taskId}}
+
+###
 POST {{baseUrl}}/tasks
 Content-Type: application/json
 
 {
-  "title": "Build Week 03 API",
-  "description": "Create users and tasks GET/POST routes",
-  "status": "pending",
-  "priority": "high",
-  "category": "school",
-  "dueDate": "2026-03-30",
-  "assignedTo": "Edwin"
+  "title": "Validate task endpoints",
+  "projectId": "{{projectId}}",
+  "createdBy": "{{createdBy}}",
+  "assignedTo": "{{assignedTo}}",
+  "status": "pending"
 }
 
-### Get task by id
-GET {{baseUrl}}/tasks/69c81ea3f4a73146c0138b98
-
-### Update task
-PUT {{baseUrl}}/tasks/REPLACE_WITH_REAL_ID
+###
+PUT {{baseUrl}}/tasks/{{taskId}}
 Content-Type: application/json
 
 {
-  "title": "Updated Week 03 API",
-  "status": "completed",
-  "priority": "medium"
+  "title": "Validate task endpoints and responses",
+  "status": "in-progress"
 }
 
-### Delete task
-DELETE {{baseUrl}}/tasks/REPLACE_WITH_REAL_ID
+###
+DELETE {{baseUrl}}/tasks/{{taskId}}

@@ -1,104 +1,215 @@
-const { ObjectId } = require('mongodb');
-const { createError } = require('../middleware/errorHandler');
-const {
-  findAllTasks,
-  findTaskById,
-  insertTask,
-  updateTaskById,
-  deleteTaskById
-} = require('../models/task');
+import mongoose from "mongoose";
+import Task from "../models/task.js";
 
-async function getAllTasks(req, res, next) {
+export const getAllTasks = async (req, res) => {
   try {
-    const tasks = await findAllTasks();
-    return res.status(200).json(tasks);
-  } catch (error) {
-    return next(createError(500, 'Failed to fetch tasks', error.message));
-  }
-}
+    const tasks = await Task.find()
+      .populate("projectId", "name status")
+      .sort({ createdAt: -1 });
 
-async function getTaskById(req, res, next) {
+    res.status(200).json({
+      success: true,
+      count: tasks.length,
+      data: tasks
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch tasks",
+      error: error.message
+    });
+  }
+};
+
+export const getTaskById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    if (!ObjectId.isValid(id)) {
-      return next(createError(400, 'Invalid task id'));
+    if (!mongoose.isValidObjectId(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid task ID"
+      });
     }
 
-    const task = await findTaskById(id);
+    const task = await Task.findById(id)
+      .populate("projectId", "name status");
 
     if (!task) {
-      return next(createError(404, 'Task not found'));
+      return res.status(404).json({
+        success: false,
+        message: "Task not found"
+      });
     }
 
-    return res.status(200).json(task);
-  } catch (error) {
-    return next(createError(500, 'Failed to fetch task', error.message));
-  }
-}
-
-async function createTask(req, res, next) {
-  try {
-    const result = await insertTask(req.body);
-
-    return res.status(201).json({
-      message: 'Task created successfully',
-      insertedId: result.insertedId
+    res.status(200).json({
+      success: true,
+      data: task
     });
   } catch (error) {
-    return next(createError(500, 'Failed to create task', error.message));
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch task",
+      error: error.message
+    });
   }
-}
+};
 
-async function updateTask(req, res, next) {
+export const createTask = async (req, res) => {
+  try {
+    const {
+      title,
+      description,
+      status,
+      priority,
+      dueDate,
+      projectId,
+      assignedTo,
+      createdBy,
+      tags
+    } = req.body;
+
+    if (!title || !projectId || !createdBy) {
+      return res.status(400).json({
+        success: false,
+        message: "title, projectId, and createdBy are required"
+      });
+    }
+
+    if (!mongoose.isValidObjectId(projectId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid projectId"
+      });
+    }
+
+    if (!mongoose.isValidObjectId(createdBy)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid createdBy"
+      });
+    }
+
+    if (assignedTo && !mongoose.isValidObjectId(assignedTo)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid assignedTo"
+      });
+    }
+
+    const newTask = await Task.create({
+      title,
+      description,
+      status,
+      priority,
+      dueDate,
+      projectId,
+      assignedTo,
+      createdBy,
+      tags
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Task created successfully",
+      data: newTask
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to create task",
+      error: error.message
+    });
+  }
+};
+
+export const updateTask = async (req, res) => {
   try {
     const { id } = req.params;
 
-    if (!ObjectId.isValid(id)) {
-      return next(createError(400, 'Invalid task id'));
+    if (!mongoose.isValidObjectId(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid task ID"
+      });
     }
 
-    const result = await updateTaskById(id, req.body);
-
-    if (!result) {
-      return next(createError(404, 'Task not found'));
+    if (req.body.projectId && !mongoose.isValidObjectId(req.body.projectId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid projectId"
+      });
     }
 
-    return res.status(200).json({
-      message: 'Task updated successfully',
-      task: result
+    if (req.body.createdBy && !mongoose.isValidObjectId(req.body.createdBy)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid createdBy"
+      });
+    }
+
+    if (req.body.assignedTo && !mongoose.isValidObjectId(req.body.assignedTo)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid assignedTo"
+      });
+    }
+
+    const updatedTask = await Task.findByIdAndUpdate(id, req.body, {
+      new: true,
+      runValidators: true
+    });
+
+    if (!updatedTask) {
+      return res.status(404).json({
+        success: false,
+        message: "Task not found"
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Task updated successfully",
+      data: updatedTask
     });
   } catch (error) {
-    return next(createError(500, 'Failed to update task', error.message));
+    res.status(500).json({
+      success: false,
+      message: "Failed to update task",
+      error: error.message
+    });
   }
-}
+};
 
-async function deleteTask(req, res, next) {
+export const deleteTask = async (req, res) => {
   try {
     const { id } = req.params;
 
-    if (!ObjectId.isValid(id)) {
-      return next(createError(400, 'Invalid task id'));
+    if (!mongoose.isValidObjectId(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid task ID"
+      });
     }
 
-    const result = await deleteTaskById(id);
+    const deletedTask = await Task.findByIdAndDelete(id);
 
-    if (result.deletedCount === 0) {
-      return next(createError(404, 'Task not found'));
+    if (!deletedTask) {
+      return res.status(404).json({
+        success: false,
+        message: "Task not found"
+      });
     }
 
-    return res.status(200).json({
-      message: 'Task deleted successfully'
+    res.status(200).json({
+      success: true,
+      message: "Task deleted successfully"
     });
   } catch (error) {
-    return next(createError(500, 'Failed to delete task', error.message));
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete task",
+      error: error.message
+    });
   }
-}
-
-module.exports = {
-  getAllTasks,
-  getTaskById,
-  createTask,
-  updateTask,
-  deleteTask
 };

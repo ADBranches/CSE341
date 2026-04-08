@@ -1,23 +1,30 @@
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const { MONGODB_URI, DB_NAME } = require('../config/env');
+import { MongoClient, ServerApiVersion } from "mongodb";
+import { MONGODB_URI, DB_NAME } from "../config/env.js";
+import mongoose from "mongoose";
 
 let client;
 let database;
+let mongooseReady = false;
 
-async function connectToDb() {
+async function connectDB() {
   if (database) return database;
 
   client = new MongoClient(MONGODB_URI, {
     serverApi: {
       version: ServerApiVersion.v1,
       strict: true,
-      deprecationErrors: true
-    }
+      deprecationErrors: true,
+    },
   });
 
   await client.connect();
   database = client.db(DB_NAME);
   await database.command({ ping: 1 });
+
+  if (!mongooseReady && mongoose.connection.readyState !== 1) {
+    await mongoose.connect(MONGODB_URI, { dbName: DB_NAME });
+    mongooseReady = true;
+  }
 
   console.log(`MongoDB connected -> ${DB_NAME}`);
   return database;
@@ -25,7 +32,7 @@ async function connectToDb() {
 
 function getDb() {
   if (!database) {
-    throw new Error('Database not connected yet. Call connectToDb() first.');
+    throw new Error("Database not connected yet. Call connectDB() first.");
   }
   return database;
 }
@@ -36,10 +43,12 @@ async function closeDb() {
     client = null;
     database = null;
   }
+
+  if (mongoose.connection.readyState !== 0) {
+    await mongoose.disconnect();
+    mongooseReady = false;
+  }
 }
 
-module.exports = {
-  connectToDb,
-  getDb,
-  closeDb
-};
+export { getDb, closeDb };
+export default connectDB;

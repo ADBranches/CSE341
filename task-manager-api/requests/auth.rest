@@ -1,0 +1,8 @@
+# Auth routes are not implemented yet in this project.
+# Planned future endpoints:
+# GET  /auth/login
+# GET  /auth/callback
+# POST /auth/logout
+# GET  /auth/me
+#
+# Do not test auth from this file until Phase 8+ implements real auth routes.

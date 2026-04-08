@@ -58,4 +58,4 @@ function validateTask(isUpdate = false) {
   };
 }
 
-module.exports = validateTask;
+export default validateTask;
