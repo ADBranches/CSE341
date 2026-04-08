@@ -39,7 +39,7 @@ passport.use(
         const nameParts = displayName.split(" ");
         const firstName = nameParts[0] || "GitHub";
         const lastName = nameParts.slice(1).join(" ") || "User";
-        const githubId = profile.id;
+        const githubId = String(profile.id);
         const githubUsername = profile.username || "";
         const avatarUrl = profile.photos?.[0]?.value || "";
 
