@@ -43,6 +43,7 @@ router.get("/:id", validateObjectId("id", "user"), getUserById);
    }
 */
 router.post("/", validateUser(false), createUser);
+
 /* #swagger.tags = ['Users']
    #swagger.summary = 'Create a user'
    #swagger.requestBody = {
