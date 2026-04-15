@@ -43,6 +43,39 @@ router.get("/:id", validateObjectId("id", "user"), getUserById);
    }
 */
 router.post("/", validateUser(false), createUser);
+/* #swagger.tags = ['Users']
+   #swagger.summary = 'Create a user'
+   #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              firstName: { type: "string", example: "Edwin" },
+              lastName: { type: "string", example: "Bwambale" },
+              email: { type: "string", example: "edwin@example.com" },
+              role: { type: "string", example: "admin" },
+              phone: { type: "string", example: "+256700000000" },
+              isActive: { type: "boolean", example: true }
+            },
+            required: ["firstName", "lastName", "email", "role", "phone"]
+          }
+        }
+      }
+   }
+   #swagger.responses[201] = {
+      description: 'User created successfully'
+   }
+   #swagger.responses[400] = {
+      description: 'Invalid request data'
+   }
+   #swagger.responses[500] = {
+      description: 'Server error'
+   }
+*/
+router.post("/", validateUser(false), createUser);
+router.put("/:id", validateObjectId("id", "user"), validateUser(true), updateUser);
 
 /* #swagger.tags = ['Users']
    #swagger.summary = 'Update a user'
@@ -53,16 +86,22 @@ router.post("/", validateUser(false), createUser);
       required: true,
       type: 'string'
    }
-   #swagger.parameters['body'] = {
-      in: 'body',
+   #swagger.requestBody = {
       required: true,
-      schema: {
-        firstName: 'Updated',
-        lastName: 'User',
-        email: 'updated@example.com',
-        role: 'user',
-        phone: '+256700000001',
-        isActive: true
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              firstName: { type: "string", example: "Updated" },
+              lastName: { type: "string", example: "User" },
+              email: { type: "string", example: "updated@example.com" },
+              role: { type: "string", example: "user" },
+              phone: { type: "string", example: "+256700000001" },
+              isActive: { type: "boolean", example: true }
+            }
+          }
+        }
       }
    }
    #swagger.responses[200] = {
@@ -79,29 +118,6 @@ router.post("/", validateUser(false), createUser);
    }
 */
 router.put("/:id", validateObjectId("id", "user"), validateUser(true), updateUser);
-
-/* #swagger.tags = ['Users']
-   #swagger.summary = 'Delete a user'
-   #swagger.description = 'Deletes an existing user by MongoDB ObjectId'
-   #swagger.parameters['id'] = {
-      in: 'path',
-      description: 'User id',
-      required: true,
-      type: 'string'
-   }
-   #swagger.responses[200] = {
-      description: 'User deleted successfully'
-   }
-   #swagger.responses[400] = {
-      description: 'Invalid user id'
-   }
-   #swagger.responses[404] = {
-      description: 'User not found'
-   }
-   #swagger.responses[500] = {
-      description: 'Server error'
-   }
-*/
 router.delete("/:id", validateObjectId("id", "user"), deleteUser);
 
 export default router;
