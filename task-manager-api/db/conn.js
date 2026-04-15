@@ -4,30 +4,63 @@ import mongoose from "mongoose";
 
 let client;
 let database;
-let mongooseReady = false;
+let connectingPromise = null;
 
 async function connectDB() {
-  if (database) return database;
+  const mongoReady = Boolean(database);
+  const mongooseReady = mongoose.connection.readyState === 1;
 
-  client = new MongoClient(MONGODB_URI, {
-    serverApi: {
-      version: ServerApiVersion.v1,
-      strict: true,
-      deprecationErrors: true,
-    },
-  });
-
-  await client.connect();
-  database = client.db(DB_NAME);
-  await database.command({ ping: 1 });
-
-  if (!mongooseReady && mongoose.connection.readyState !== 1) {
-    await mongoose.connect(MONGODB_URI, { dbName: DB_NAME });
-    mongooseReady = true;
+  if (mongoReady && mongooseReady) {
+    return database;
   }
 
-  console.log(`MongoDB connected -> ${DB_NAME}`);
-  return database;
+  if (connectingPromise) {
+    return connectingPromise;
+  }
+
+  connectingPromise = (async () => {
+    try {
+      if (!client) {
+        client = new MongoClient(MONGODB_URI, {
+          serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+          },
+        });
+      }
+
+      if (!database) {
+        await client.connect();
+        database = client.db(DB_NAME);
+        await database.command({ ping: 1 });
+      }
+
+      if (mongoose.connection.readyState !== 1) {
+        await mongoose.connect(MONGODB_URI, { dbName: DB_NAME });
+      }
+
+      console.log(`MongoDB connected -> ${DB_NAME}`);
+      return database;
+    } catch (error) {
+      if (client) {
+        await client.close();
+        client = null;
+      }
+
+      database = null;
+
+      if (mongoose.connection.readyState !== 0) {
+        await mongoose.disconnect();
+      }
+
+      throw error;
+    } finally {
+      connectingPromise = null;
+    }
+  })();
+
+  return connectingPromise;
 }
 
 function getDb() {
@@ -41,12 +74,12 @@ async function closeDb() {
   if (client) {
     await client.close();
     client = null;
-    database = null;
   }
+
+  database = null;
 
   if (mongoose.connection.readyState !== 0) {
     await mongoose.disconnect();
-    mongooseReady = false;
   }
 }
 

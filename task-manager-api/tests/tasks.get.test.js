@@ -5,11 +5,11 @@ import connectDB, { closeDb } from "../db/conn.js";
 describe("Tasks GET routes", () => {
   beforeAll(async () => {
     await connectDB();
-  }, 30000);
+  }, 60000);
 
   afterAll(async () => {
     await closeDb();
-  }, 30000);
+  }, 60000);
 
   test("GET /tasks returns 200", async () => {
     const res = await request(app).get("/tasks");

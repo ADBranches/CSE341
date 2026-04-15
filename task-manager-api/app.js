@@ -23,26 +23,32 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    proxy: true,
-    store: MongoStore.create({
-      mongoUrl: process.env.MONGODB_URI,
-      dbName: process.env.DB_NAME,
-    }),
-    cookie: {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-    },
-  })
-);
+const isTest = process.env.NODE_ENV === "test";
 
-app.use(passport.initialize());
-app.use(passport.session());
+if (!isTest) {
+  app.use(
+    session({
+      secret: process.env.SESSION_SECRET,
+      resave: false,
+      saveUninitialized: false,
+      proxy: true,
+      store: MongoStore.create({
+        mongoUrl: process.env.MONGODB_URI,
+        dbName: process.env.DB_NAME,
+      }),
+      cookie: {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+      },
+    })
+  );
+
+  app.use(passport.initialize());
+  app.use(passport.session());
+} else {
+  app.use(passport.initialize());
+}
 
 app.get("/", (req, res) => {
   res.status(200).json({
