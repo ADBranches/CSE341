@@ -7,8 +7,18 @@ export default function validateProject(isUpdate = false) {
       if (!name) errors.push("name is required");
       if (!ownerId) errors.push("ownerId is required");
     } else {
-      const allowed = ["name", "ownerId", "description", "status", "startDate", "endDate"];
-      const hasAtLeastOneField = allowed.some((field) => req.body[field] !== undefined);
+      const allowedFields = [
+        "name",
+        "ownerId",
+        "description",
+        "status",
+        "startDate",
+        "endDate",
+      ];
+
+      const hasAtLeastOneField = allowedFields.some(
+        (field) => req.body[field] !== undefined
+      );
 
       if (!hasAtLeastOneField) {
         errors.push("At least one valid field is required for update");
@@ -17,6 +27,10 @@ export default function validateProject(isUpdate = false) {
 
     if (name !== undefined && typeof name !== "string") {
       errors.push("name must be a string");
+    }
+
+    if (ownerId !== undefined && typeof ownerId !== "string") {
+      errors.push("ownerId must be a string ObjectId");
     }
 
     if (description !== undefined && typeof description !== "string") {
@@ -30,12 +44,27 @@ export default function validateProject(isUpdate = false) {
       errors.push("status must be planning, active, on-hold, or completed");
     }
 
-    if (startDate !== undefined && Number.isNaN(Date.parse(startDate))) {
+    const parsedStartDate =
+      startDate !== undefined ? Date.parse(startDate) : undefined;
+    const parsedEndDate =
+      endDate !== undefined ? Date.parse(endDate) : undefined;
+
+    if (startDate !== undefined && Number.isNaN(parsedStartDate)) {
       errors.push("startDate must be a valid date");
     }
 
-    if (endDate !== undefined && Number.isNaN(Date.parse(endDate))) {
+    if (endDate !== undefined && Number.isNaN(parsedEndDate)) {
       errors.push("endDate must be a valid date");
+    }
+
+    if (
+      startDate !== undefined &&
+      endDate !== undefined &&
+      !Number.isNaN(parsedStartDate) &&
+      !Number.isNaN(parsedEndDate) &&
+      parsedEndDate < parsedStartDate
+    ) {
+      errors.push("endDate cannot be earlier than startDate");
     }
 
     if (errors.length) {

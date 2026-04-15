@@ -35,4 +35,9 @@ describe("Projects GET routes", () => {
     const res = await request(app).get("/projects/507f1f77bcf86cd799439011");
     expect(res.statusCode).toBe(404);
   });
+
+  test("GET /projects/:id returns 400 for an invalid project id", async () => {
+    const res = await request(app).get("/projects/123");
+    expect(res.statusCode).toBe(400);
+  });
 });

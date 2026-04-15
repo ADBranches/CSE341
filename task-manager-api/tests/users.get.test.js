@@ -33,4 +33,9 @@ describe("Users GET routes", () => {
     const res = await request(app).get("/users/507f1f77bcf86cd799439011");
     expect(res.statusCode).toBe(404);
   });
+
+  test("GET /users/:id returns 400 for an invalid user id", async () => {
+    const res = await request(app).get("/users/123");
+    expect(res.statusCode).toBe(400);
+  });
 });

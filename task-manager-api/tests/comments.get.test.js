@@ -35,4 +35,9 @@ describe("Comments GET routes", () => {
     const res = await request(app).get("/comments/507f1f77bcf86cd799439011");
     expect(res.statusCode).toBe(404);
   });
+
+  test("GET /comments/:id returns 400 for an invalid comment id", async () => {
+    const res = await request(app).get("/comments/123");
+    expect(res.statusCode).toBe(400);
+  });
 });

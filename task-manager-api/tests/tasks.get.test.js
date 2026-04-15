@@ -35,4 +35,8 @@ describe("Tasks GET routes", () => {
     const res = await request(app).get("/tasks/507f1f77bcf86cd799439011");
     expect(res.statusCode).toBe(404);
   });
+  test("GET /tasks/:id returns 400 for an invalid task id", async () => {
+    const res = await request(app).get("/tasks/123");
+    expect(res.statusCode).toBe(400);
+  });
 });
